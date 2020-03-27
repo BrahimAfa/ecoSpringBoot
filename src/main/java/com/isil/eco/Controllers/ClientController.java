@@ -7,13 +7,17 @@ import com.isil.eco.Services.ClientService;
 import com.isil.eco.Services.ProductService;
 import com.isil.eco.helpers.ModelValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.List;
+
 @RestController
-@RequestMapping("/api/client")
+@RequestMapping("client")
+@CrossOrigin(origins = {"http://localhost:3000"})
 public class ClientController {
      ClientService clientService;
 
@@ -31,6 +35,7 @@ public class ClientController {
         if(bindingResult.hasErrors()) {
             throw new ClientValidationException(ModelValidator.getErrorsFromBindingResult(bindingResult));
         }
+        client.setRole("Client");
         return clientService.saveClient(client);
     }
 

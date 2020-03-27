@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/api/product")
+@RequestMapping("product")
 public class ProductController {
 
     ProductService productService;
@@ -46,7 +47,7 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     void deleteProduct(@PathVariable Long id) {
-        productService.deleteProduct(id);
+           productService.deleteProduct(id);
     }
 
 }
