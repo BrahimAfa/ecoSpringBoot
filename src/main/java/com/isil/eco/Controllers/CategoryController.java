@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("category")
-@CrossOrigin(origins = {"http://localhost:3000"})
+@CrossOrigin(origins = {"*"})
 public class CategoryController {
     CategoryService categoryService;
     public CategoryController(CategoryService categoryService) {

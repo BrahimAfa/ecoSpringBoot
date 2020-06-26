@@ -4,6 +4,11 @@ import com.isil.eco.Exceptions.ClientValidationException;
 import com.isil.eco.Models.Product;
 import com.isil.eco.Services.ProductService;
 import com.isil.eco.helpers.ModelValidator;
+import com.isil.eco.security.services.UserDetailsImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,10 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("product")
+@RequestMapping("/product")
 public class ProductController {
+    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
     ProductService productService;
 
@@ -24,10 +30,13 @@ public class ProductController {
     }
     @GetMapping("/")
     List<Product> all() {
+        UserDetailsImpl userDetails =
+                (UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        logger.debug("HERE IS THE USERNAME====> : "+userDetails.getUsername());
         return productService.getAllProducts();
     }
 
-    @PostMapping("/")
+    @PostMapping("/add")
     Product newProduct(@RequestBody @Valid Product product, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             throw new ClientValidationException(ModelValidator.getErrorsFromBindingResult(bindingResult));
@@ -35,17 +44,17 @@ public class ProductController {
         return productService.saveProduct(product);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/find/{id}")
     Product one(@PathVariable Long id) {
         return productService.getOneProduct(id);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     Product replaceProduct(@RequestBody Product product, @PathVariable Long id) {
         return productService.updateProduct(product,id);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     void deleteProduct(@PathVariable Long id) {
            productService.deleteProduct(id);
     }

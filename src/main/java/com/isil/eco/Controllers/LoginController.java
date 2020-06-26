@@ -1,8 +1,8 @@
 package com.isil.eco.Controllers;
 
 import com.isil.eco.Exceptions.ModelNotFoundException;
-import com.isil.eco.Models.Client;
-import com.isil.eco.Services.ClientService;
+import com.isil.eco.Models.User;
+import com.isil.eco.Services.UserService;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,21 +10,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("login")
-@CrossOrigin(origins = {"http://localhost:3000"})
+@CrossOrigin(origins = {"*"})
 public class LoginController {
-    private final ClientService clientService;
+    private final UserService userService;
 
-    public LoginController(ClientService clientService) {
-        this.clientService = clientService;
+    public LoginController(UserService userService) {
+        this.userService = userService;
     }
 
     @PostMapping("/")
-    public Client getAllClients(@RequestBody Client client){
-               Client retrivedClient=  clientService.getClientByEmail(client.getEmail());
-               if(retrivedClient==null) throw new ModelNotFoundException("Client",client.getEmail());
-               if(retrivedClient.getPassword().equals(client.getPassword())){
-                   return retrivedClient;
+    public User getAllClients(@RequestBody User user){
+               User retrivedUser =  userService.getByEmail(user.getEmail())
+                       .orElseThrow(()-> new ModelNotFoundException("Client", user.getEmail()));
+               if(retrivedUser.getPassword().equals(user.getPassword())){
+                   return retrivedUser;
                }
-               throw new ModelNotFoundException("Client",client.getEmail());
+               throw new ModelNotFoundException("Client", user.getEmail());
     }
 }

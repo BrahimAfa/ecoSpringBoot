@@ -1,57 +1,59 @@
 package com.isil.eco.Controllers;
 
 import com.isil.eco.Exceptions.ClientValidationException;
-import com.isil.eco.Models.Client;
-import com.isil.eco.Models.Product;
-import com.isil.eco.Services.ClientService;
-import com.isil.eco.Services.ProductService;
+import com.isil.eco.Models.User;
+import com.isil.eco.Services.UserService;
 import com.isil.eco.helpers.ModelValidator;
+import com.isil.eco.payload.response.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("client")
-@CrossOrigin(origins = {"http://localhost:3000"})
+@CrossOrigin(origins = {"*"})
 public class ClientController {
-     ClientService clientService;
-
-    public ClientController(ClientService clientService) {
-        this.clientService = clientService;
+     UserService userService;
+    @Autowired
+    PasswordEncoder encoder;
+    public ClientController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/")
-    List<Client> all() {
-        return clientService.getAllClients();
+    List<User> all() {
+        return userService.getAllClients();
     }
 
-    @PostMapping("/")
-    Client newClient(@RequestBody @Valid Client client, BindingResult bindingResult) {
+    @PostMapping("/add")
+    User newClient(@RequestBody @Valid User user, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             throw new ClientValidationException(ModelValidator.getErrorsFromBindingResult(bindingResult));
         }
-        client.setRole("Client");
-        return clientService.saveClient(client);
+        user.setRole("Client");
+        return userService.saveClient(user);
     }
 
-    @GetMapping("/{id}")
-    Client one(@PathVariable Long id) {
-        return clientService.getOneClient(id);
+    @GetMapping("/find/{id}")
+    User one(@PathVariable Long id) {
+        return userService.getOneClient(id);
     }
 
-    @PutMapping("/{id}")
-    Client replaceClient(@RequestBody Client client, @PathVariable Long id) {
-        return clientService.updateClient(client,id);
+    @PutMapping("/update/{id}")
+    User replaceClient(@RequestBody User user, @PathVariable Long id) {
+        user.setPassword(encoder.encode( user.getPassword()));
+
+        return userService.updateClient(user,id);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     void deleteClient(@PathVariable Long id) {
-        clientService.deleteClient(id);
+        userService.deleteClient(id);
     }
 
 }
