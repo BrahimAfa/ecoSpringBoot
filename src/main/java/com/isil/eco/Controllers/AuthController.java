@@ -91,7 +91,7 @@ public class AuthController {
 			user.setRole("ROLE_CLIENT");
 		}
 		if (username == null) {
-			user.setUsername(user.getFname()+(Math.random()*100));
+			user.setUsername(user.getLname()+(Math.floor(Math.random()*9999)));
 		}
 
 		User savedUser = userService.saveClient(user);

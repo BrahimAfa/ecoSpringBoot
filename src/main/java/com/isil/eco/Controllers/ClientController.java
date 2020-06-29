@@ -46,7 +46,7 @@ public class ClientController {
 
     @PutMapping("/update/{id}")
     User replaceClient(@RequestBody User user, @PathVariable Long id) {
-        user.setPassword(encoder.encode( user.getPassword()));
+        user.setPassword(encoder.encode(user.getPassword()));
 
         return userService.updateClient(user,id);
     }

@@ -32,7 +32,6 @@ public class ProductController {
     List<Product> all() {
         UserDetailsImpl userDetails =
                 (UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        logger.debug("HERE IS THE USERNAME====> : "+userDetails.getUsername());
         return productService.getAllProducts();
     }
 
