@@ -1,15 +1,11 @@
 package com.isil.eco.Controllers;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import javax.validation.Valid;
 
 import com.isil.eco.Exceptions.ClientValidationException;
 import com.isil.eco.Models.User;
 import com.isil.eco.Services.UserService;
 import com.isil.eco.helpers.ModelValidator;
-import com.isil.eco.security.jwt.AuthEntryPointJwt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
